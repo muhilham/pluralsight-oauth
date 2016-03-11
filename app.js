@@ -8,10 +8,12 @@ var passport = require('passport');
 var google = require('passport-google-oauth');
 var GoogleStrategy = google.OAuth2Strategy;
 var session = require('express-session');
+var _ = require('lodash');
 
 var routes = {
-  index: require('./routes/index'),
-  users: require('./routes/users')
+  '': require('./routes/index'),
+  users: require('./routes/users'),
+  auth: require('./routes/auth')
 };
 
 var config = {
@@ -57,8 +59,9 @@ passport.deserializeUser(deserializeUser);
  */
 passport.use(new GoogleStrategy(config.google.config, config.google.callback));
 
-app.use('/', routes.index);
-app.use('/users', routes.users);
+_.forOwn(routes, function(router, uri) {
+  app.use('/' + uri, router);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

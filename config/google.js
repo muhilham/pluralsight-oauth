@@ -1,5 +1,8 @@
 'use strict';
 
+// Download Your credential JSON File from google developer console
+// Create and store it into credentials directory
+var credentials = require('../credentials/google.com.json').web;
 
 /**
  * [googleConfig description]
@@ -11,11 +14,10 @@
  * - google going to send the user back to once their done authenticated
  */
 var googleConfig = {
-  clientID: '246344478881-dsor2e7p6kn6d90pk4iamktkt8o0bo85.apps.googleusercontent.com',
-  clientSecret: 'OuHLRai-QNi1_1Hv7BnKpvc0',
-  callbackURL: 'http://localhost:3013/auth/google/call'
+  clientID: credentials.client_id,
+  clientSecret: credentials.client_secret,
+  callbackURL: credentials.redirect_uris[0]
 };
-
 
 /**
  * [getFromGoogle]
