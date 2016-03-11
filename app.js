@@ -5,10 +5,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var google = require('passport-google-oauth');
+var GoogleStrategy = google.OAuth2Strategy;
 var session = require('express-session');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes = {
+  index: require('./routes/index'),
+  users: require('./routes/users')
+};
+
+var config = {
+  google: require('./config/google'),
+  session: require('./config/express-session')
+};
 
 var app = express();
 
@@ -24,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({secret: 'pukimak'}));
+app.use(session(config.session.config));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -43,8 +52,13 @@ passport.serializeUser(serializeUser);
  */
 passport.deserializeUser(deserializeUser);
 
-app.use('/', routes);
-app.use('/users', users);
+/**
+ * In order to use the strategy we have to plugged it into the passport
+ */
+passport.use(new GoogleStrategy(config.google.config, config.google.callback));
+
+app.use('/', routes.index);
+app.use('/users', routes.users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -78,11 +92,11 @@ app.use(function(err, req, res, next) {
 });
 
 function serializeUser(user, done) {
-  done(null, user);
+  return done(null, user);
 }
 
 function deserializeUser(user, done) {
-  done(null, user);
+  return done(null, user);
 }
 
 module.exports = app;
