@@ -35,13 +35,13 @@ app.use(passport.session());
  * it takes a function, and it will pass you the whole user object
  * and a callback function that will call when we're ready to go
  */
-passport.serializeuser(serializeUser);
+passport.serializeUser(serializeUser);
 
 /**
  * the opposite piece of serializeuser
  * pull a user back out the session
  */
-passport.deserializeuser(deserializeUser);
+passport.deserializeUser(deserializeUser);
 
 app.use('/', routes);
 app.use('/users', users);
