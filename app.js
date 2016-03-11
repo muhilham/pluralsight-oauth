@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,6 +23,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({secret: 'pukimak'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+/**
+ * place a user object into the session
+ * you can imagine you might wanna keep that small,
+ * you dont wanna put your whole user into the session
+ * it takes a function, and it will pass you the whole user object
+ * and a callback function that will call when we're ready to go
+ */
+passport.serializeuser(serializeUser);
+
+/**
+ * the opposite piece of serializeuser
+ * pull a user back out the session
+ */
+passport.deserializeuser(deserializeUser);
 
 app.use('/', routes);
 app.use('/users', users);
@@ -56,5 +77,12 @@ app.use(function(err, req, res, next) {
   });
 });
 
+function serializeUser(user, done) {
+  done(null, user);
+}
+
+function deserializeUser(user, done) {
+  done(null, user);
+}
 
 module.exports = app;
