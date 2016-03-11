@@ -15,8 +15,8 @@ var redirectParam = {
 // This is specific to google strategy
 var signinParam = {
   scope: [
-    'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/userinfo.email'
+    'email',
+    'profile'
   ]
 };
 
