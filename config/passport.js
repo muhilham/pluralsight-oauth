@@ -19,6 +19,7 @@ function PassportApp(app) {
   passport.deserializeUser(deserializeUser);
 
   require('./strategies/google')();
+  require('./strategies/twitter')();
 
   function serializeUser(user, done) {
     return done(null, user);

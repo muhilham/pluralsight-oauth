@@ -30,7 +30,16 @@ router
   .get(passportGoogle(signinParam));
 
 function passportGoogle(param) {
-  return passport.authenticate('google', param)
+  return passport.authenticate('google', param);
 }
+
+router
+  .route('/twitter/callback')
+  .get(passport.authenticate('twitter', redirectParam));
+
+// Sign In With Twitter
+router
+  .route('/twitter')
+  .get(passport.authenticate('twitter'));
 
 module.exports = router;
