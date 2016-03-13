@@ -4,9 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var passport = require('passport');
-var google = require('passport-google-oauth');
-var GoogleStrategy = google.OAuth2Strategy;
 var session = require('express-session');
 var _ = require('lodash');
 
@@ -17,7 +14,6 @@ var routes = {
 };
 
 var config = {
-  google: require('./config/google'),
   session: require('./config/express-session')
 };
 
@@ -36,28 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session(config.session.config));
-app.use(passport.initialize());
-app.use(passport.session());
-
-/**
- * place a user object into the session
- * you can imagine you might wanna keep that small,
- * you dont wanna put your whole user into the session
- * it takes a function, and it will pass you the whole user object
- * and a callback function that will call when we're ready to go
- */
-passport.serializeUser(serializeUser);
-
-/**
- * the opposite piece of serializeuser
- * pull a user back out the session
- */
-passport.deserializeUser(deserializeUser);
-
-/**
- * In order to use the strategy we have to plugged it into the passport
- */
-passport.use(new GoogleStrategy(config.google.config, config.google.callback));
+require('./config/passport')(app);
 
 _.forOwn(routes, function(router, uri) {
   app.use('/' + uri, router);
@@ -93,13 +68,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-function serializeUser(user, done) {
-  return done(null, user);
-}
-
-function deserializeUser(user, done) {
-  return done(null, user);
-}
 
 module.exports = app;
