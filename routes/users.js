@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+
+router.use('/', loggedInPrevent);
 /* GET users listing. */
 router.get('/', loggedIn);
 
@@ -12,14 +14,19 @@ router.get('/', loggedIn);
  * @param  {Function} next [description]
  */
 function loggedIn(req, res, next) {
+  var userData = req.user;
+  var userRendered = {
+    name: userData.displayName,
+    image: userData.image
+  };
+  return res.render('users', userRendered);
+}
+
+function loggedInPrevent(req, res, next) {
   if (!req.user) {
     return res.redirect('/');
   }
-  var userData = req.user._json;
-  var userRendered = {
-    name: userData.displayName,
-    image: userData.image.url
-  };
-  return res.render('users', userRendered);
+
+  return next();
 }
 module.exports = router;

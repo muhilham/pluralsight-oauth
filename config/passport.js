@@ -18,6 +18,8 @@ function PassportApp(app) {
    */
   passport.deserializeUser(deserializeUser);
 
+  require('./strategies/google')();
+
   function serializeUser(user, done) {
     return done(null, user);
   }
@@ -25,8 +27,6 @@ function PassportApp(app) {
   function deserializeUser(user, done) {
     return done(null, user);
   }
-
-  require('./strategies/google')();
 }
 
 module.exports = PassportApp;

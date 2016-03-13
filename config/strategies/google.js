@@ -34,13 +34,22 @@ function googlePassportStrategies() {
    * @param  {Function} done         [callback that were gonna call when were done doing whatever we're gonna do with all these information]
    */
   function getFromGoogle(req, accessToken, refreshToken, profile, done) {
-    return done(null, profile);
+    var user = {
+      email: profile.emails[0].value,
+      image: profile.photos[0].value,
+      displayName: profile.displayName,
+      google: {
+        id: profile.id,
+        token: accessToken || refreshToken.access_token
+      }
+    };
+    return done(null, user);
   }
 
   /**
    * In order to use the strategy we have to plugged it into the passport
    */
-  passport.use(new GoogleStrategy(googleConfig, getFromGoogle));
+  return passport.use(new GoogleStrategy(googleConfig, getFromGoogle));
 }
 
 module.exports = googlePassportStrategies;
