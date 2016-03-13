@@ -20,6 +20,12 @@ var signinParam = {
   ]
 };
 
+var signinParamFb = {
+  scope: [
+    'email'
+  ]
+};
+
 router
   .route(googleRedirect)
   .get(passportGoogle(redirectParam));
@@ -41,5 +47,14 @@ router
 router
   .route('/twitter')
   .get(passport.authenticate('twitter'));
+
+router
+  .route('/facebook/callback')
+  .get(passport.authenticate('facebook', redirectParam));
+
+// Sign In With Facebook
+router
+  .route('/facebook')
+  .get(passport.authenticate('facebook', signinParamFb));
 
 module.exports = router;

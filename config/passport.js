@@ -20,6 +20,7 @@ function PassportApp(app) {
 
   require('./strategies/google')();
   require('./strategies/twitter')();
+  require('./strategies/facebook')();
 
   function serializeUser(user, done) {
     return done(null, user);
